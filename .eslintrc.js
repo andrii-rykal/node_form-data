@@ -4,8 +4,8 @@ module.exports = {
   env: {
     jest: true,
   },
+  plugins: ['jest'],
   rules: {
     'no-proto': 0,
   },
-  plugins: ['jest'],
 };

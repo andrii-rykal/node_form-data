@@ -38,10 +38,9 @@ function createServer() {
             return;
           }
 
-          fs.writeFileSync(
-            path.join(__dirname, '..', 'db', 'expense.json'),
-            JSON.stringify(expense, null, 2),
-          );
+          const filePath = path.join(__dirname, '..', 'db', 'expense.json');
+
+          fs.writeFileSync(filePath, JSON.stringify(expense, null, 2));
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(expense));
