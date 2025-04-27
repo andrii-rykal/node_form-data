@@ -84,7 +84,7 @@
                 if (response.ok) {
                     alert('Expense saved successfully!');
                 } else {
-                    alert(`Error: ${result}`);
+                    alert(`Error: ${result.error || 'Unknown error occurred'}`);
                 }
             } catch (err) {
                 alert('Error saving expense');

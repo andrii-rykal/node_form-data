@@ -32,7 +32,10 @@ function createServer() {
             res.writeHead(400, { 'Content-Type': 'application/json' });
 
             res.end(
-              '"Missing required fields: date, title, amount are required"',
+              JSON.stringify({
+                error:
+                  'Missing required fields: date, title, amount are required',
+              }),
             );
 
             return;
@@ -40,13 +43,38 @@ function createServer() {
 
           const filePath = path.join(__dirname, '..', 'db', 'expense.json');
 
-          fs.writeFileSync(filePath, JSON.stringify(expense, null, 2));
+          // Initialize expenses array
+          let expenses = [];
+
+          // Read existing expenses if file exists
+          if (fs.existsSync(filePath)) {
+            try {
+              const fileContent = fs.readFileSync(filePath, 'utf8');
+              const parsedContent = JSON.parse(fileContent);
+
+              expenses = Array.isArray(parsedContent) ? parsedContent : [];
+            } catch (readError) {
+              // If file is corrupted, start with empty array
+              expenses = [];
+            }
+          }
+
+          // Add new expense
+          expenses.push(expense);
+
+          // Write updated array back to file
+          fs.writeFileSync(filePath, JSON.stringify(expenses, null, 2));
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(expense));
         } catch (err) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end('"Failed to process request"');
+
+          res.end(
+            JSON.stringify({
+              error: 'Failed to process request',
+            }),
+          );
         }
       });
     } else {
